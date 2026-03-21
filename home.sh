@@ -55,9 +55,10 @@ while [ $opcion -ne 6 ]; do
         ;;
         3)
             if [ -e $OUTPUT ];then
-                echo "Si existe"
+                echo "Alumnos ordenados por su padron"
+                sort -n "$OUTPUT"
             else
-                echo "❌ No existe el archivo $FILENAME"
+                echo "❌ No existe el archivo $FILENAME. Elegir la opcion 1 y luego la opcion 2 para crearlo."
             fi
         ;;
         4)
