@@ -1,15 +1,19 @@
 #!/bin/bash
-RUTA_BASE="EPNro1"
-OUTPUT="$RUTA_BASE/salida/$FILENAME.txt"
+RUTA_BASE="$HOME/EPNro1"
 
+ENTRADA="$RUTA_BASE/entrada"
+SALIDA="$RUTA_BASE/salida"
+PROCESADO="$RUTA_BASE/procesado"
+
+OUTPUT="$SALIDA/$FILENAME.txt"
 
 cargando() {
     for j in {1..3}; do
         for i in {1..3}; do
             printf "."
-            sleep 0.08
+            sleep 0.06
         done
-        sleep 0.1
+        sleep 0.08
         clear
     done
 
@@ -17,6 +21,16 @@ cargando() {
 }
 
 clear
+
+if [ "$1" == "-d" ]; then
+    cargando
+
+    pkill -f consolidar.sh 2>/dev/null
+    rm -rf "$RUTA_BASE"
+
+    echo "✅ Entorno eliminado correctamente"
+    exit 0
+fi
 
 opcion=0
 
@@ -37,40 +51,58 @@ while [ $opcion -ne 6 ]; do
     case $opcion in
         1)
             cargando
-            BASE="EPNro1"
 
-            mkdir -p "$BASE/entrada"
-            mkdir -p "$BASE/salida"
-            mkdir -p "$BASE/procesado"
+            mkdir -p "$ENTRADA"
+            mkdir -p "$SALIDA"
+            mkdir -p "$PROCESADO"
 
             echo "✅ Entorno creado correctamente"
-            echo "📁 Ruta: $(pwd)/$BASE"
+            echo "📁 Ruta: $RUTA_BASE"
 
-            echo "📂 Carpetas dentro de $BASE:"
-            ls "$BASE"
+            echo "📂 Carpetas dentro de $RUTA_BASE:"
+            ls "$RUTA_BASE"
         ;;
         2)
             cargando
-            sh consolidar.sh
-        ;;
-        3)
-            if [ -e $OUTPUT ];then
-                echo "Alumnos ordenados por su padron"
-                sort -n "$OUTPUT"
+
+            if [ -z "$FILENAME" ] || [ ! -d "$ENTRADA" ] || [ ! -d "$SALIDA" ]; then
+                echo "❌ FILENAME no está definido o no creaste el entorno (opción 1)"
             else
-                echo "❌ No existe el archivo $FILENAME. Elegir la opcion 1 y luego la opcion 2 para crearlo."
+                sh consolidar.sh "$ENTRADA" "$SALIDA" "$PROCESADO" &
+                echo "✅ Proceso de consolidación iniciado en background"
             fi
         ;;
-        4)
-            if [ -e $OUTPUT ];then
-                echo "Si existe"
+        3)
+            cargando
+            if [ -e "$OUTPUT" ];then
+                echo "Alumnos ordenados por numero de padron: "
+                sort -n "$OUTPUT"
             else
                 echo "❌ No existe el archivo $FILENAME"
             fi
         ;;
-        5)
-            if [ -e $OUTPUT ];then
-                echo "Si existe"
+        4)  
+            cargando
+            if [ -e "$OUTPUT" ];then
+                echo "Las 10 notas mas altas del listado son las siguientes: " 
+                sort  -k5  -nr  "$OUTPUT" | head
+            else
+                echo "❌ No existe el archivo $FILENAME"
+            fi
+        ;;
+        5)  
+            cargando
+            read -p "Ingresa un numero de padron: " numero_de_padron
+            
+            if [ -e "$OUTPUT" ]; then
+                datos=$(grep "^$numero_de_padron " "$OUTPUT")
+    
+                if [ -z "$datos" ]; then
+                    echo "❌ No se encontró alumno con ese número de padrón"
+                else
+                    echo "Los datos del alumno son los siguientes: "
+                    echo "$datos"
+                fi
             else
                 echo "❌ No existe el archivo $FILENAME"
             fi
