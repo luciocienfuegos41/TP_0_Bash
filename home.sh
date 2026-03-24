@@ -78,7 +78,7 @@ while [ $opcion -ne 6 ]; do
                 echo "Alumnos ordenados por numero de padron: "
                 sort -n "$OUTPUT"
             else
-                echo "❌ No existe el archivo $FILENAME"
+                echo "❌ No existe el archivo $FILENAME. Elegir la opcion 1 y luego la opcion 2 para crearlo."
             fi
         ;;
         4)  
