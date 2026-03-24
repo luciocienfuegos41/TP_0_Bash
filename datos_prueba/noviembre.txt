@@ -1,0 +1,10 @@
+122332 Juan Lopez jlopez@fi.uba.ar 8 
+100998 Pedro Valdéz pvaldez@fi.uba.ar 5 
+89032 Carla Simone csimone@fi.uba.ar 7
+120432 Esteban Quito equito@fi.uba.ar 3
+108776 Florencia Vigna fvigna@fi.uba.ar 8
+115432 Gaston Gaudio ggaudio@fi.uba.ar 10
+100321 Hilario Libano hlibano@fi.uba.ar 2
+92443 Ines Pertine ipertine@fi.uba.ar 7
+111889 Juan Topo jtopo@fi.uba.ar 6
+107554 Kevin Kay kkay@fi.uba.ar 9
