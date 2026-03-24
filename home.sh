@@ -7,6 +7,31 @@ PROCESADO="$RUTA_BASE/procesado"
 
 OUTPUT="$SALIDA/$FILENAME.txt"
 
+validar_archivo_salida() {
+    if [ -z "$FILENAME" ]; then
+        echo "❌ FILENAME no está definido"
+        echo "Definilo antes de usar esta opción. Ejemplo: export FILENAME=consolidado"
+        return 1
+    fi
+
+    if [ ! -d "$SALIDA" ]; then
+        echo "❌ No existe el entorno. Elegí la opción 1 para crearlo."
+        return 1
+    fi
+
+    if [ ! -e "$OUTPUT" ]; then
+        echo "❌ No existe el archivo $FILENAME.txt. Elegí la opción 2 para crearlo."
+        return 1
+    fi
+
+    if [ ! -s "$OUTPUT" ]; then
+        echo "❌ El archivo $FILENAME.txt está vacío. Carga archivos en la carpeta $ENTRADA para visualizar los datos."
+        return 1
+    fi
+
+    return 0
+}
+
 cargando() {
     for j in {1..3}; do
         for i in {1..3}; do
@@ -74,27 +99,23 @@ while [ $opcion -ne 6 ]; do
         ;;
         3)
             cargando
-            if [ -e "$OUTPUT" ];then
+            if validar_archivo_salida; then
                 echo "Alumnos ordenados por numero de padron: "
                 sort -n "$OUTPUT"
-            else
-                echo "❌ No existe el archivo $FILENAME.txt Elegir la opcion 1 y luego la opcion 2 para crearlo."
             fi
         ;;
         4)  
             cargando
-            if [ -e "$OUTPUT" ];then
+            if validar_archivo_salida; then
                 echo "Las 10 notas mas altas del listado son las siguientes: " 
                 sort  -k5  -nr  "$OUTPUT" | head
-            else
-                echo "❌ No existe el archivo $FILENAME.txt Elegir la opcion 1 y luego la opcion 2 para crearlo."
             fi
         ;;
         5)  
             cargando
             read -p "Ingresa un numero de padron: " numero_de_padron
             
-            if [ -e "$OUTPUT" ]; then
+            if validar_archivo_salida; then
                 datos=$(grep "^$numero_de_padron " "$OUTPUT")
     
                 if [ -z "$datos" ]; then
@@ -103,8 +124,6 @@ while [ $opcion -ne 6 ]; do
                     echo "Los datos del alumno son los siguientes: "
                     echo "$datos"
                 fi
-            else
-                echo "❌ No existe el archivo $FILENAME.txt Elegir la opcion 1 y luego la opcion 2 para crearlo."
             fi
         ;;
         6)
@@ -117,4 +136,3 @@ while [ $opcion -ne 6 ]; do
 
     echo ""
 done
-
